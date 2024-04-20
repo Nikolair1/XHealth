@@ -20,12 +20,34 @@ client = tweepy.Client(
 )
 
 
-def tweet():
-    client.create_tweet(
-        text="Hello Twitter world! This is my first tweet using .",
+# topics is a dicitonary from topic -> topic summary
+def tweet(summary, topics):
+    text = "Weekly Summary 💊🏥🩺📋 \n" + summary + "\n\nTopics:\n"
+    for i, topic in enumerate(topics):
+        text += topic + "\n"
+
+    response = client.create_tweet(
+        text=text,
         user_auth=True,
     )
-    print("success")
+    counter = 1
+    for topic in topics:
+        client.create_tweet(
+            text=topic[-1] + " " + topics[topic],
+            user_auth=True,
+            in_reply_to_tweet_id=response.data["id"],
+        )
+        counter += 1
 
 
-tweet()
+# testing
+summary = (
+    "Our first summary focuses on Bird Flu and good advice from reputable doctors."
+)
+topics = {
+    "Daily Health Advice 🍏": "Eat an apple a day!",
+    "Disease Outbreaks and Public Health Emergencies 🚨": "Measles is at an all time low!",
+    "Health Disparities and Equity 🤲": "Bird flu affects different social classes differently.",
+    "Medical Research and Innovations 🧬": "Researchers found huge potential of weight-loss drugs like Ozempic and Wegovy, and their implications for public health and medical research.",
+}
+tweet(summary, topics)
