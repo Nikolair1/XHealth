@@ -35,17 +35,18 @@ def search_all_and_save(output_file, data_filename):
 def search_one(query):
     search_results = client.search_recent_tweets(query=query)
     res = []
-    for tweet in search_results.data:
-        res.append(tweet.text)
+    if search_results.data is not None:
+        for tweet in search_results.data:
+            if tweet:
+                res.append(tweet.text)
     return res
 
 
-"""
-query = "from:_nicky_2 -is:retweet"
-res = search_one(query)
-print(res)
+# query = "from:_nicky_2 -is:retweet"
+# res = search_one(query)
+# print(res)
 
-Outputs: [<Tweet id=1780002836904059043 text='Hello World!'>, <Tweet id=1780000896002531621 text='Hello world again!'>]
-"""
+# Outputs: [<Tweet id=1780002836904059043 text='Hello World!'>, <Tweet id=1780000896002531621 text='Hello world again!'>]
 
-# search_all_and_save("debug_results.txt", "debug.csv")
+
+search_all_and_save("all_tweets.txt", "accounts.csv")
