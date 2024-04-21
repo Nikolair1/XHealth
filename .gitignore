@@ -1,3 +1,5 @@
 twitter_credentials.sh
 __pycache*
+.env
+return.txt
 flask-app/venv/
