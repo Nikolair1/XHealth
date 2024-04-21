@@ -32,7 +32,7 @@ topics = [
 
 # topics is a dicitonary from topic -> topic summary
 def tweet(summary, topic_summaries):
-    text = "1Weekly Summary 💊🏥🩺📋 \n" + summary + "\n\nTopics:\n"
+    text = "2Weekly Summary 💊🏥🩺📋 \n" + summary + "\n\nTopics:\n"
     for topic in topics:
         text += topic + "\n"
 
@@ -40,6 +40,9 @@ def tweet(summary, topic_summaries):
         text=text,
         user_auth=True,
     )
+
+    print(response)
+
     counter = 0
     while counter < 4:
         client.create_tweet(
@@ -49,23 +52,23 @@ def tweet(summary, topic_summaries):
         )
         counter += 1
 
-    # # SAVE tweet data and link in flask DB
-    # flask_endpoint = "http://127.0.0.1:5000/add_tweet"
-    # # Construct the data dictionary
-    # data = {
-    #     "summary": summary,
-    #     "topic1": topic_summaries[0],  # Assign the first topic summary to topic1
-    #     "topic2": topic_summaries[1],  # Assign the second topic summary to topic2
-    #     "topic3": topic_summaries[2],  # Assign the third topic summary to topic3
-    #     "topic4": topic_summaries[3],  # Assign the fourth topic summary to topic4
-    #     "link": response.data["link"],
-    #     "date": "2024-06-12",
-    # }
-    # response = requests.post(flask_endpoint, json=data)
-    # if response.status_code == 200:
-    #     print("Tweet saved successfully")
-    # else:
-    #     print("Failed to save tweet")
+    # SAVE tweet data and link in flask DB
+    flask_endpoint = "http://127.0.0.1:5000/add_tweet"
+    # Construct the data dictionary
+    data = {
+        "summary": summary,
+        "topic1": topic_summaries[0],  # Assign the first topic summary to topic1
+        "topic2": topic_summaries[1],  # Assign the second topic summary to topic2
+        "topic3": topic_summaries[2],  # Assign the third topic summary to topic3
+        "topic4": topic_summaries[3],  # Assign the fourth topic summary to topic4
+        "link": "https://twitter.com/_nicky_2/status/" + response.data["id"],
+        "date": "2024-06-12",
+    }
+    response = requests.post(flask_endpoint, json=data)
+    if response.status_code == 200:
+        print("Tweet saved successfully")
+    else:
+        print("Failed to save tweet")
 
 
 # testing
