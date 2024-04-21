@@ -1,6 +1,8 @@
 import tweepy
 import os
 from query_parser import parse_csv
+import requests
+
 
 # Environment vars
 bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
@@ -20,12 +22,63 @@ client = tweepy.Client(
 )
 
 
-def tweet():
-    client.create_tweet(
-        text="Hello Twitter world! This is my first tweet using .",
+topics = [
+    "Daily Health Advice 🍏",
+    "Disease Outbreaks and Public Health Emergencies 🚨",
+    "Health Disparities and Equity 🤲",
+    "Medical Research and Innovations 🧬",
+]
+
+
+# topics is a dicitonary from topic -> topic summary
+def tweet(summary, topic_summaries):
+    text = "2Weekly Summary 💊🏥🩺📋 \n" + summary + "\n\nTopics:\n"
+    for topic in topics:
+        text += topic + "\n"
+
+    response = client.create_tweet(
+        text=text,
         user_auth=True,
     )
-    print("success")
+
+    print(response)
+
+    counter = 0
+    while counter < 4:
+        client.create_tweet(
+            text=topics[counter][-1] + " " + topic_summaries[counter],
+            user_auth=True,
+            in_reply_to_tweet_id=response.data["id"],
+        )
+        counter += 1
+
+    # SAVE tweet data and link in flask DB
+    flask_endpoint = "http://127.0.0.1:5000/add_tweet"
+    # Construct the data dictionary
+    data = {
+        "summary": summary,
+        "topic1": topic_summaries[0],  # Assign the first topic summary to topic1
+        "topic2": topic_summaries[1],  # Assign the second topic summary to topic2
+        "topic3": topic_summaries[2],  # Assign the third topic summary to topic3
+        "topic4": topic_summaries[3],  # Assign the fourth topic summary to topic4
+        "link": "https://twitter.com/_nicky_2/status/" + response.data["id"],
+        "date": "2024-06-12",
+    }
+    response = requests.post(flask_endpoint, json=data)
+    if response.status_code == 200:
+        print("Tweet saved successfully")
+    else:
+        print("Failed to save tweet")
 
 
-tweet()
+# testing
+summary = (
+    "Our first summary focuses on Bird Flu and good advice from reputable doctors."
+)
+topic_summaries = [
+    "1Eat an apple a day!",
+    "1Measles is at an all time low!",
+    "1Bird flu affects different social classes differently.",
+    "1Researchers found huge potential of weight-loss drugs like Ozempic and Wegovy, and their implications for public health and medical research.",
+]
+tweet(summary, topic_summaries)
