@@ -49,6 +49,9 @@
         margin-left: 20px; /* Add left margin to topic content */
         margin-bottom: 10px; /* Add bottom margin for spacing */
       }
+      .topic-item {
+        text-align: left;
+      }
     </style>
   </head>
   <body>
@@ -69,28 +72,26 @@
           </li>
         </ul>
         <p><strong>🔍 Topics:</strong></p>
-        <ul>
-          <li>
-            <span class="topic-title">Daily Health Advice 🍏 -</span>
-            <span class="topic-content">{{ most_recent_tweet.topic1 }}</span>
-          </li>
-          <li>
-            <span class="topic-title"
-              >Disease Outbreaks and Public Health Emergencies 🚨 -</span
+        <div class="tweet-details">
+          <div class="topic-item">
+            <strong>🍏 Daily Health Advice -</strong> {{
+            most_recent_tweet.topic1 }}
+          </div>
+          <div class="topic-item">
+            <strong
+              >🚨 Disease Outbreaks and Public Health Emergencies -</strong
             >
-            <span class="topic-content">{{ most_recent_tweet.topic2 }}</span>
-          </li>
-          <li>
-            <span class="topic-title">Health Disparities and Equity 🤲 -</span>
-            <span class="topic-content">{{ most_recent_tweet.topic3 }}</span>
-          </li>
-          <li>
-            <span class="topic-title"
-              >Medical Research and Innovations 🧬 -</span
-            >
-            <span class="topic-content">{{ most_recent_tweet.topic4 }}</span>
-          </li>
-        </ul>
+            {{ most_recent_tweet.topic2 }}
+          </div>
+          <div class="topic-item">
+            <strong>🤲 Health Disparities and Equity -</strong> {{
+            most_recent_tweet.topic3 }}
+          </div>
+          <div class="topic-item">
+            <strong>🧬 Medical Research and Innovations -</strong> {{
+            most_recent_tweet.topic4 }}
+          </div>
+        </div>
         <p><strong>📅 Date:</strong> {{ most_recent_tweet.date }}</p>
       </div>
       {% else %}
