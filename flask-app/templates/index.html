@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Current Week</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #e6ffe6; /* Light green background */
+        color: #000; /* Black text */
+        font-family: "Comic Neue", cursive; /* Comic Neue font */
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        text-align: center;
+      }
+      h1 {
+        margin-bottom: 20px;
+      }
+      .tweet-summary {
+        margin-top: 40px;
+        font-size: 1.2em;
+        text-align: left;
+      }
+      .past-weeks-link {
+        position: absolute;
+        top: 20px; /* Adjust top position as needed */
+        right: 20px; /* Adjust right position as needed */
+        color: inherit; /* Inherit text color from parent */
+        text-decoration: inherit; /* Inherit text decoration from parent */
+        font-size: 20px; /* Increase font size */
+      }
+      .summary-link {
+        text-decoration: underline; /* Underline the summary */
+        color: #007bff; /* Blue color for the link */
+        cursor: pointer; /* Show pointer cursor on hover */
+      }
+      .topic-title {
+        font-weight: bold; /* Make topic title bold */
+      }
+      .topic-content {
+        margin-left: 20px; /* Add left margin to topic content */
+        margin-bottom: 10px; /* Add bottom margin for spacing */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="/past_tweets" class="past-weeks-link">📅 Past Weeks</a>
+      <h1>Current Week</h1>
+      {% if most_recent_tweet %}
+      <div class="tweet-summary">
+        <p><strong>📝 Summary:</strong></p>
+        <ul>
+          <li>
+            <a
+              class="summary-link"
+              href="{{ most_recent_tweet.link }}"
+              target="_blank"
+              >{{ most_recent_tweet.summary }}</a
+            >
+          </li>
+        </ul>
+        <p><strong>🔍 Topics:</strong></p>
+        <ul>
+          <li>
+            <span class="topic-title">Daily Health Advice 🍏 -</span>
+            <span class="topic-content">{{ most_recent_tweet.topic1 }}</span>
+          </li>
+          <li>
+            <span class="topic-title"
+              >Disease Outbreaks and Public Health Emergencies 🚨 -</span
+            >
+            <span class="topic-content">{{ most_recent_tweet.topic2 }}</span>
+          </li>
+          <li>
+            <span class="topic-title">Health Disparities and Equity 🤲 -</span>
+            <span class="topic-content">{{ most_recent_tweet.topic3 }}</span>
+          </li>
+          <li>
+            <span class="topic-title"
+              >Medical Research and Innovations 🧬 -</span
+            >
+            <span class="topic-content">{{ most_recent_tweet.topic4 }}</span>
+          </li>
+        </ul>
+        <p><strong>📅 Date:</strong> {{ most_recent_tweet.date }}</p>
+      </div>
+      {% else %}
+      <p>No tweets available.</p>
+      {% endif %}
+    </div>
+  </body>
+</html>
