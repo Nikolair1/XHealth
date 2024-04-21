@@ -27,9 +27,10 @@ def search_all_and_save(output_file, data_filename):
         for name in account_names:
             query = "from:" + name + " -is:retweet"
             results = search_one(query)
-            f.write("Account Name: " + name + "-------------------" + "\n")
+            # f.write("Account Name: " + name + "-------------------" + "\n")
             for result in results:
-                f.write(result + "\n")
+                cleaned_result = result.replace("\n", "")
+                f.write(cleaned_result + "\n")
 
 
 def search_one(query):
