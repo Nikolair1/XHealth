@@ -32,12 +32,6 @@ with app.app_context():
 
 migrate = Migrate(app, db)
 
-# Sample data for past weeks
-past_weeks_data = {
-    "Week 1": "Text for Week 1",
-    "Week 2": "Text for Week 2",
-}
-
 
 @app.route("/tweets", methods=["GET"])
 def get_tweets():
@@ -118,9 +112,7 @@ def index():
     most_recent_tweet = Tweet.query.order_by(Tweet.date.desc()).first()
     print(most_recent_tweet)
     # Render the template with the most recent tweet and past weeks data
-    return render_template(
-        "./index.html", most_recent_tweet=most_recent_tweet, weeks=past_weeks_data
-    )
+    return render_template("./index.html", most_recent_tweet=most_recent_tweet)
 
 
 @app.route("/past_tweets")
@@ -128,6 +120,25 @@ def past_tweets():
     # Retrieve all past tweets
     past_tweets = Tweet.query.all()
     return render_template("past_weeks.html", past_tweets=past_tweets)
+
+
+# Function to delete a tweet by ID
+def delete_tweet(tweet_id):
+    tweet = Tweet.query.get(tweet_id)
+    if tweet:
+        db.session.delete(tweet)
+        db.session.commit()
+        return True
+    return False
+
+
+@app.route("/delete_tweet/<int:tweet_id>", methods=["DELETE"])
+def delete_tweet_route(tweet_id):
+    deleted = delete_tweet(tweet_id)
+    if deleted:
+        return jsonify({"message": f"Tweet with ID {tweet_id} deleted successfully"})
+    else:
+        return jsonify({"error": f"Tweet with ID {tweet_id} not found"}), 404
 
 
 if __name__ == "__main__":

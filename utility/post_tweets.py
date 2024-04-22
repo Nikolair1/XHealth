@@ -1,6 +1,5 @@
 import tweepy
 import os
-from query_parser import parse_csv
 import requests
 
 
@@ -31,11 +30,11 @@ topics = [
 
 
 # topics is a dicitonary from topic -> topic summary
-def tweet(summary, topic_summaries):
-    print("ARGS ARE ", summary)
+def tweet(summary, topic_summaries, date):
+    # print("ARGS ARE ", summary)
     print(len(summary))
 
-    text = "Weekly Summary 📋 \n"
+    text = "Weekly Summary " + date + " 📋 \n"
     for topic, emoji in zip(summary, topics):
         text += emoji[-1] + " " + topic + "\n"
 
@@ -67,7 +66,7 @@ def tweet(summary, topic_summaries):
         "topic3": topic_summaries[2],  # Assign the third topic summary to topic3
         "topic4": topic_summaries[3],  # Assign the fourth topic summary to topic4
         "link": "https://twitter.com/_nicky_2/status/" + response.data["id"],
-        "date": "2024-06-13",
+        "date": "2024-04-21",
     }
     response = requests.post(flask_endpoint, json=data)
     if response.status_code == 200:

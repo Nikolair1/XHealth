@@ -14,34 +14,41 @@ prompt = """You are a tweet analyzer, extract all the information from these twe
  Find the 5 best tweets for each of the categories and then summarize them into a 150 character passage that uses correct grammar and is easy to follow as if there was no longer access to the tweets. Be as specific as possible while maintaining the paragraph format and end each summary with at most 2 relevant and positive hashtags. Use complete sentences and avoid semicolons and return them in the following format:
 {"category1": "summary1", "category2":  "summary2", "category3": "summary3", "category4":  "summary4"}.
 """
-from post_tweets import tweet
+from utility.post_tweets import tweet
 
-file_path = "all_tweets.txt"
+file_path = "./data/april_21_tweets.txt"
 
 
-async def create_summaries():
+async def create_summaries(date):
     client = OpenAI()
     text = ""
     with open(file_path, "r") as file:
         lines = file.readlines()
         random.shuffle(lines)
         text = lines[0:200]
-
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": "".join(text)},
-        ],
-    )
-    dict = json.loads(completion.choices[0].message.content)
     arr = []
-    arr.append(dict["Daily Health and Nutrition"])
-    arr.append(dict["Disease Outbreaks and Public Health Emergencies"])
-    arr.append(dict["Health Disparities and Equity"])
-    arr.append(dict["Medical Research and Innovations"])
+    tooLong = True
+    while tooLong:
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": "".join(text)},
+            ],
+        )
 
-    print(arr)
+        dict = json.loads(completion.choices[0].message.content)
+
+        arr.append(dict["Daily Health and Nutrition"])
+        arr.append(dict["Disease Outbreaks and Public Health Emergencies"])
+        arr.append(dict["Health Disparities and Equity"])
+        arr.append(dict["Medical Research and Innovations"])
+        tooLong = False
+        for item in arr:
+            if len(item) > 275:
+                print("Too long! Trying again. \n")
+                tooLong = True
+                arr = []
 
     completion2 = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -59,8 +66,9 @@ async def create_summaries():
     topics = arr
     print("before JSON", summary)
     summary = json.loads(summary)
-    tweet(summary, topics)
+    tweet(summary, topics, date)
     return arr
 
 
-asyncio.run(create_summaries())
+date = "April 21st, 2024"
+asyncio.run(create_summaries(date))

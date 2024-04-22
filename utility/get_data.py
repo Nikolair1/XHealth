@@ -1,6 +1,9 @@
 import tweepy
 import os
 from query_parser import parse_csv
+from datetime import datetime
+import time
+
 
 # Environment vars
 bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
@@ -21,12 +24,12 @@ client = tweepy.Client(
 
 
 # Saves all tweets to output file, run carefully
-def search_all_and_save(output_file, data_filename):
+def search_all_and_save(output_file, data_filename, search_f):
     account_names = parse_csv(data_filename)
     with open(output_file, "w") as f:
         for name in account_names:
             query = "from:" + name + " -is:retweet"
-            results = search_one(query)
+            results = search_f(query)
             # f.write("Account Name: " + name + "-------------------" + "\n")
             for result in results:
                 cleaned_result = result.replace("\n", "")
@@ -43,11 +46,20 @@ def search_one(query):
     return res
 
 
-# query = "from:_nicky_2 -is:retweet"
-# res = search_one(query)
-# print(res)
+def search_one_historic(query):
+    # Introduce a delay of 0.5 seconds before making the next request
+    time.sleep(5)
+    start_time = datetime(2024, 3, 31).isoformat() + "Z"
+    end_time = datetime(2024, 4, 7).isoformat() + "Z"
+    search_results = client.search_all_tweets(
+        query=query, start_time=start_time, end_time=end_time
+    )
+    res = []
+    if search_results.data is not None:
+        for tweet in search_results.data:
+            if tweet:
+                res.append(tweet.text)
+    return res
 
-# Outputs: [<Tweet id=1780002836904059043 text='Hello World!'>, <Tweet id=1780000896002531621 text='Hello world again!'>]
 
-
-search_all_and_save("all_tweets.txt", "accounts.csv")
+search_all_and_save("april_7_tweets.txt", "../data/accounts.csv", search_one_historic)
