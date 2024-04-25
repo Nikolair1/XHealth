@@ -1,5 +1,5 @@
 # XHealth 
-A TL;DR email newsletter leveraging tweets from the healthcare industry, made for the X Developer Challenge 2024. https://twitter.com/XHealth_AI
+A TL;DR AI newsletter leveraging tweets from the healthcare industry, made for the X Developer Challenge 2024. https://twitter.com/XHealth_AI
 
 # Project Purpose
 This project addresses the challenge of information overload in the healthcare industry by providing a concise and easily digestible summary of reputable tweets. The TL;DR newsletter offers busy professionals and enthusiasts a convenient way to stay informed about key developments without sifting through extensive social media feeds.
